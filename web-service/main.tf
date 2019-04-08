@@ -81,6 +81,10 @@ variable "internal_zone_id" {
   description = "The zone ID to create the record in"
 }
 
+variable "vpc_id" {
+  description = "The id of the vpc used for this service"
+}
+
 /**
  * Options.
  */
@@ -132,13 +136,9 @@ resource "aws_ecs_service" "main" {
   iam_role        = "${var.iam_role}"
 
   load_balancer {
-    elb_name       = "${module.elb.id}"
+    target_group_arn = "${module.alb.target_group_arn}"
     container_name = "${module.task.name}"
     container_port = "${var.container_port}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
 
@@ -163,8 +163,8 @@ module "task" {
 EOF
 }
 
-module "elb" {
-  source = "./elb"
+module "alb" {
+  source = "./alb"
 
   name               = "${module.task.name}"
   port               = "${var.port}"
@@ -178,6 +178,7 @@ module "elb" {
   security_groups    = "${var.security_groups}"
   log_bucket         = "${var.log_bucket}"
   ssl_certificate_id = "${var.ssl_certificate_id}"
+  vpc_id             = "${var.vpc_id}"
 }
 
 /**
@@ -186,30 +187,30 @@ module "elb" {
 
 // The name of the ELB
 output "name" {
-  value = "${module.elb.name}"
+  value = "${module.alb.name}"
 }
 
 // The DNS name of the ELB
 output "dns" {
-  value = "${module.elb.dns}"
+  value = "${module.alb.dns}"
 }
 
 // The id of the ELB
 output "elb" {
-  value = "${module.elb.id}"
+  value = "${module.alb.id}"
 }
 
 // The zone id of the ELB
 output "zone_id" {
-  value = "${module.elb.zone_id}"
+  value = "${module.alb.zone_id}"
 }
 
 // FQDN built using the zone domain and name (external)
 output "external_fqdn" {
-  value = "${module.elb.external_fqdn}"
+  value = "${module.alb.external_fqdn}"
 }
 
 // FQDN built using the zone domain and name (internal)
 output "internal_fqdn" {
-  value = "${module.elb.internal_fqdn}"
+  value = "${module.alb.internal_fqdn}"
 }
