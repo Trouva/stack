@@ -16,17 +16,17 @@ variable "zone_id" {
 
 variable "security_groups" {
   description = "A list of security group IDs"
-  type = "list"
+  type        = "list"
 }
 
 variable "subnet_ids" {
   description = "A list of subnet IDs"
-  type = "list"
+  type        = "list"
 }
 
 variable "availability_zones" {
   description = "A list of availability zones"
-  type = "list"
+  type        = "list"
 }
 
 variable "database_name" {

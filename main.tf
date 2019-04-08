@@ -47,7 +47,7 @@ variable "cidr" {
 
 variable "internal_subnets" {
   description = "a list of CIDRs for internal subnets in your VPC, must be set if the cidr variable is defined, needs to have as many elements as there are availability zones"
-  default     = ["10.30.0.0/19" ,"10.30.64.0/19", "10.30.128.0/19"]
+  default     = ["10.30.0.0/19", "10.30.64.0/19", "10.30.128.0/19"]
 }
 
 variable "external_subnets" {
@@ -62,12 +62,12 @@ variable "availability_zones" {
 
 variable "bastion_instance_type" {
   description = "Instance type for the bastion"
-  default = "t2.micro"
+  default     = "t2.micro"
 }
 
 variable "ecs_cluster_name" {
   description = "the name of the cluster, if not specified the variable name will be used"
-  default = ""
+  default     = ""
 }
 
 variable "ecs_instance_type" {

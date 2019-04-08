@@ -1,11 +1,8 @@
-variable "name" {
-}
+variable "name" {}
 
-variable "environment" {
-}
+variable "environment" {}
 
-variable "account_id" {
-}
+variable "account_id" {}
 
 data "template_file" "policy" {
   template = "${file("${path.module}/policy.json")}"
