@@ -24,6 +24,15 @@ resource "aws_s3_bucket" "logs" {
     Environment = "${var.environment}"
   }
 
+  lifecycle_rule {
+    id      = "expiration"
+    enabled = true
+
+    expiration {
+      days = 365
+    }
+  }
+
   policy = "${data.template_file.policy.rendered}"
 }
 
