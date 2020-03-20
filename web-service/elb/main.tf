@@ -108,7 +108,7 @@ resource "aws_route53_record" "external" {
 
   alias {
     zone_id                = "${aws_elb.main.zone_id}"
-    name                   = "${aws_elb.main.dns_name}"
+    name                   = "dualstack.${aws_elb.main.dns_name}"
     evaluate_target_health = false
   }
 }
@@ -120,7 +120,7 @@ resource "aws_route53_record" "internal" {
 
   alias {
     zone_id                = "${aws_elb.main.zone_id}"
-    name                   = "${aws_elb.main.dns_name}"
+    name                   = "dualstack.${aws_elb.main.dns_name}"
     evaluate_target_health = false
   }
 }
