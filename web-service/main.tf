@@ -35,6 +35,14 @@ variable "image_version" {
   default     = "latest"
 }
 
+variable "launch_type" {
+  default = "EC2"
+}
+
+variable "task_role_arn" {
+  default = ""
+}
+
 variable "subnet_ids" {
   description = "Comma separated list of subnet IDs that will be passed to the ELB module"
 }
@@ -130,6 +138,7 @@ resource "aws_ecs_service" "main" {
   task_definition = "${module.task.arn}"
   desired_count   = "${var.desired_count}"
   iam_role        = "${var.iam_role}"
+  launch_type     = "${var.launch_type}"
 
   load_balancer {
     elb_name       = "${module.elb.id}"
@@ -145,6 +154,8 @@ resource "aws_ecs_service" "main" {
 module "task" {
   source = "../task"
 
+  launch_type   = "${var.launch_type}"
+  task_role_arn = "${var.task_role_arn}"
   name          = "${coalesce(var.name, replace(var.image, "/", "-"))}"
   image         = "${var.image}"
   image_version = "${var.image_version}"

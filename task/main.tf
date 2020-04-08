@@ -62,6 +62,18 @@ variable "memory" {
   default     = 512
 }
 
+variable "launch_type" {
+  default = "EC2"
+}
+
+variable "task_role_arn" {
+  default = ""
+}
+
+variable "task_execution_role_arn" {
+  default = ""
+}
+
 variable "region" {
   description = "The region for this task"
   default     = "eu-west-1"
@@ -75,6 +87,13 @@ variable "region" {
 
 resource "aws_ecs_task_definition" "main" {
   family = "${var.name}"
+
+  memory = "${var.memory}"
+  cpu    = "${var.cpu}"
+
+  requires_compatibilities = [ "${var.launch_type == "FARGATE" ? "FARGATE" : "EC2" }" ]
+  network_mode             = "${var.launch_type == "FARGATE" ? "awsvpc" : ""}"
+  execution_role_arn       = "${var.task_role_arn}"
 
   lifecycle {
     ignore_changes        = ["image"]
@@ -98,6 +117,7 @@ resource "aws_ecs_task_definition" "main" {
       "logDriver": "awslogs",
       "options": {
         "awslogs-group": "${var.name}",
+        ${var.launch_type == "FARGATE" ? "\"awslogs-stream-prefix\": \"service\"," : ""}
         "awslogs-region": "${var.region}"
       }
     }
